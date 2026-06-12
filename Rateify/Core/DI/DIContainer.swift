@@ -15,4 +15,8 @@ enum DIContainer{
         
         return GetExchangeRateUseCase(repository: repository)
     }
+    
+    static func makeExchangeRateViewModel() -> ExchangeRateViewModel{
+        ExchangeRateViewModel(getExchangeRateUseCase: makeExchangeRateUseCase())
+    }
 }
