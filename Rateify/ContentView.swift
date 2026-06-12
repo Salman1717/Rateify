@@ -8,14 +8,29 @@
 import SwiftUI
 
 struct ContentView: View {
+    
+    @State private var rateText = "Loading..."
+    
     var body: some View {
         VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+            
+            Text(rateText)
+                .task{
+                    await loadRate()
+                }
         }
-        .padding()
+    }
+    
+    private func loadRate() async{
+        do{
+            let useCase = DIContainer.makeExchangeRateUseCase()
+            
+            let rate = try await useCase.execute(from: "AED", to: "INR")
+            
+            rateText = "\(rate.fromCurrency) -> \(rate.toCurrency): \(rate.rate)"
+        }catch{
+            rateText = error.localizedDescription
+        }
     }
 }
 
