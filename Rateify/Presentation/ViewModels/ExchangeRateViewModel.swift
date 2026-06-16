@@ -13,13 +13,16 @@ final class ExchangeRateViewModel{
     
     var state = ExchangeRateVeiwState()
     
+    var fromCurrency: Currency = .AED
+    var toCurrency: Currency = .INR
+    
     private let getExchangeRateUseCase: GetExchangeRateUseCaseProtocol
     
     init(getExchangeRateUseCase: GetExchangeRateUseCaseProtocol){
         self.getExchangeRateUseCase = getExchangeRateUseCase
     }
     
-    func fetchRate(from: String, to: String) async{
+    func fetchRate() async{
         state.isLoading = true
         state.errorMessage = nil
         
@@ -28,7 +31,7 @@ final class ExchangeRateViewModel{
         }
         
         do{
-            state.exchangeRate =  try await getExchangeRateUseCase.execute(from: from, to: to)
+            state.exchangeRate =  try await getExchangeRateUseCase.execute(from: fromCurrency.rawValue, to: toCurrency.rawValue)
             
         }catch{
             state.errorMessage = error.localizedDescription
